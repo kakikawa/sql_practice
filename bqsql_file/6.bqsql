@@ -1,0 +1,34 @@
+SELECT
+    birthday,
+    COUNT(user_id) AS users
+FROM
+    sample.customers
+WHERE
+    birthday IS NOT NULL
+GROUP BY
+    birthday
+HAVING
+    users >= 2;
+
+/*
+count(*)は全てのフィールドの個数を取得
+count(user_id)はuser_idフィールドにnullを含まない個数を取得
+
+COUNT(user_id) >1とCOUNT(user_id) >= 2で返す結果は同じため
+直感的に読みやすい>= 2で明確に伝わる
+
+顧客マスタには誕生日のデータがからの場合もあるため、nullを除く操作を意識すする
+
+ */
+#修正
+SELECT
+    birthday,
+    COUNT(user_id) AS users
+FROM
+    sample.customers
+WHERE
+    birthday IS NOT NULL
+GROUP BY
+    birthday
+HAVING
+    users >= 2

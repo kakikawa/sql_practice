@@ -1,0 +1,12 @@
+SELECT
+    user_id,
+    COUNT(*) AS pageviews
+FROM
+    sample.web_log
+WHERE
+    media = 'email'
+    AND user_id IS NOT NULL
+GROUP BY
+    user_id
+HAVING
+    pageviews >= 10
