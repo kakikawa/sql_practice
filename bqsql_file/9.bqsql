@@ -1,0 +1,33 @@
+# 正答
+SELECT
+    cid,
+    MAX(session_count) - MIN(session_count) + 1 AS number_of_visits
+FROM
+    sample.web_log
+GROUP BY
+    1
+ORDER BY
+    2 DESC
+LIMIT
+    3;
+
+/*
+問題文、説明不足すぎないか？こういうものなのか？
+→ユーザー毎のセッション回数を取得しろ。という指示は合計でもないし、平均でもない。
+問題文には、訪問回数の多い順に３レコード取得しろ。とあるので、最大値を取得すればいい。
+なぜ、最小値を引いて１を加算するのか？
+→ログに記録された訪問回数の公平性を保つため。1は最小値は必ず1が求められるため、それをノーカウントにする。
+期間中に訪問がすでに最小値が4回の人もいれば、初めての人もいるため、単純に最大値のみを求めると結果が異なる。
+ */
+# 誤答
+SELECT
+    cid,
+    COUNT(*) AS number_of_visit
+FROM
+    sample.web_log
+GROUP BY
+    1
+ORDER BY
+    2 DESC
+LIMIT
+    3;
