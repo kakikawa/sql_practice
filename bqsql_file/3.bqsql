@@ -1,0 +1,13 @@
+SELECT
+    *
+FROM
+    sample.customers
+WHERE
+    birthday IS NOT NULL
+    AND is_premium IS TRUE
+ORDER BY
+    --順序の指定が2つ以上の場合、(,)で区切る
+    birthday DESC,
+    register_date
+LIMIT
+    3
