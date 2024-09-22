@@ -1,0 +1,10 @@
+SELECT
+    -- * EXCEPT (revenue) 全てのフィールドから、特定のフィールドを除外する
+    * EXCEPT (revenue),
+    revenue * 1.1 AS revenue_with_tax
+FROM
+    sample.sales
+ORDER BY
+    order_id
+LIMIT
+    3

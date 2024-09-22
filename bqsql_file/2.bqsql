@@ -1,0 +1,13 @@
+SELECT
+    order_id,
+    quantity,
+    revenue,
+    quantity + 1 AS new_qty,
+    --商品単価を算出して、新しい販売金額を求める
+    (revenue / quantity) * (quantity + 1) AS new_rev
+FROM
+    sample.sales
+ORDER BY
+    5 DESC
+LIMIT
+    3
