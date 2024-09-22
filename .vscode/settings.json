@@ -1,0 +1,8 @@
+{
+    "git.ignoreLimitWarning": true,
+
+    // bigqueryRunner file-icon setting
+    "material-icon-theme.files.associations": {
+        "*.bqsql": "database"
+    },
+}
