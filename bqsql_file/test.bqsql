@@ -76,3 +76,4 @@ FROM
   )
 SELECT
   8000 / 25600 AS a
+  -- test
