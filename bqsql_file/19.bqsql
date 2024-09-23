@@ -1,0 +1,24 @@
+SELECT
+    MAX(proper_price) - MAX(not_proper_price) AS diff
+FROM
+    (
+        SELECT
+            (
+                SELECT
+                    SUM(revenue)
+                FROM
+                    sample.sales
+                WHERE
+                    is_proper IS TRUE
+            ) AS proper_price,
+            (
+                SELECT
+                    SUM(revenue)
+                FROM
+                    sample.sales
+                WHERE
+                    is_proper IS FALSE
+            ) AS not_proper_price
+        FROM
+            sample.sales
+    )

@@ -1,0 +1,34 @@
+SELECT
+    name,
+    first_name
+FROM
+    (
+        SELECT
+            name,
+            SUBSTR(name, 1, STRPOS(name, ' ') -1) AS family_name,
+            SUBSTR(name, STRPOS(name, ' ') + 1) AS first_name
+        FROM
+            sample.customers
+        WHERE
+            gender = 2
+    )
+WHERE
+    first_name LIKE ('__子')
+    AND family_name LIKE ('_川');
+
+--正規表現を使った例
+SELECT
+    name,
+    first_name
+FROM
+    (
+        SELECT
+            name,
+            REGEXP_EXTRACT(name, r'^.川\s(..子)$') AS first_name
+        FROM
+            sample.customers
+        WHERE
+            gender = 2
+    )
+WHERE
+    first_name IS NOT NULL

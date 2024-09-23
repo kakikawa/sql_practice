@@ -1,0 +1,9 @@
+SELECT
+    name,
+    --substrで半角スペースの位置を検索し、その前後の文字列を指定する
+    SUBSTR(name, 1, STRPOS(name, ' ') -1) AS faimly_name,
+    SUBSTR(name, STRPOS(name, ' ') + 1) AS first_name
+FROM
+    sample.customers
+LIMIT
+    5

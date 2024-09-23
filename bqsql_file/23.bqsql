@@ -1,0 +1,21 @@
+--DATE_DIFF(DATE型 新しい日付け,DATE型 古い日付け, デイトパート) AS age
+SELECT
+    CONCAT(name, keisyo) AS name_with_keisyo,
+    age,
+    birthday
+FROM
+    (
+        SELECT
+            name,
+            birthday,
+            DATE_DIFF(DATE '2019-12-31', birthday, YEAR) AS age,
+            IF(DATE_DIFF(DATE '2019-12-31', birthday, YEAR) >= 50, 'さま', 'さん') AS keisyo
+        FROM
+            sample.customers
+        WHERE
+            birthday IS NOT NULL
+    )
+WHERE
+    REGEXP_CONTAINS(name, '美馬|森村')
+ORDER BY
+    birthday

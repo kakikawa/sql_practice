@@ -1,0 +1,42 @@
+WITH --年月別の売り上げを取得
+    master AS (
+        SELECT
+            --date_timeカラムから、'%Y'と'%m'をそれぞれ抽出する
+            --月別の売上がyearに紐づいてウィンドウ関数で集計分析する時に活きるから取得する
+            FORMAT_DATETIME('%Y', date_time) AS YEAR,
+            FORMAT_DATETIME('%m', date_time) AS MONTH,
+            SUM(revenue) AS sum_rev
+        FROM
+            sample.sales
+        GROUP BY
+            MONTH,
+            YEAR
+    )
+SELECT
+    YEAR,
+    MAX(max_rev),
+    MIN(min_rev),
+    MAX(max_rev) - MIN(min_rev) AS hani
+FROM
+    (
+        SELECT
+            YEAR,
+            --sum_revを100等分したとき、0つまり年別の各月の最小金額を取得する。
+            PERCENTILE_CONT(sum_rev, 0)
+            --関数の後のOVER句は、ウィンドウ関数を使う宣言で必須。
+            OVER (
+                -- パーティションとして定義するフィールドの定義、この場合はyearを指す
+                PARTITION BY
+                    YEAR
+            ) AS min_rev,
+            PERCENTILE_CONT(sum_rev, 1) OVER (
+                PARTITION BY
+                    YEAR
+            ) AS max_rev
+        FROM
+            master
+    )
+GROUP BY
+    YEAR
+ORDER BY
+    YEAR

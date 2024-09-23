@@ -1,0 +1,11 @@
+SELECT
+    product_id,
+    ROUND(SUM(revenue), -3) AS sum_rev
+FROM
+    sample.sales
+GROUP BY
+    product_id
+ORDER BY
+    2 DESC
+LIMIT
+    5

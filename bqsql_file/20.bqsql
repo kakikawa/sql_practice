@@ -1,0 +1,31 @@
+SELECT
+    SUM(diff) AS sum_diff
+FROM
+    (
+        --値引販売の個数分だけの定価販売の単価から値引販売の単価を差し引いた金額を掛け合わせる
+        SELECT
+            *,
+            quantity * (proper_unit_price - discount_unit_price) AS diff
+        FROM
+            (
+                --値引販売で絞り込むサブクエリの中に、定価販売の単価のカラムを作成
+                SELECT
+                    *,
+                    revenue / quantity AS discount_unit_price,
+                    (
+                        --定価販売の商品単価
+                        SELECT
+                            SUM(revenue) / SUM(quantity)
+                        FROM
+                            sample.sales
+                        WHERE
+                            product_id = 1
+                            AND is_proper IS TRUE
+                    ) AS proper_unit_price
+                FROM
+                    sample.sales
+                WHERE
+                    product_id = 1
+                    AND is_proper IS FALSE
+            )
+    )

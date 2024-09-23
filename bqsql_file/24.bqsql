@@ -1,0 +1,12 @@
+SELECT
+    -- DATETIME_TRUNC(DATETIME型の値, パート) AS year_month
+    DATETIME_TRUNC(date_time, MONTH) AS year_month,
+    COUNT(*) AS pageviews
+FROM
+    sample.web_log
+GROUP BY
+    year_month
+ORDER BY
+    pageviews DESC
+LIMIT
+    3
