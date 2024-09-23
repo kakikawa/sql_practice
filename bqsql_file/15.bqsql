@@ -1,0 +1,16 @@
+SELECT
+    product_name,
+    SUM(quantity) AS sum_qty,
+    SUM(revenue) AS sum_rev,
+    --SUM(cost)は販売個数を無視したレコード数*costになるため、販売個数を掛けて原価の合計を求める
+    SUM(quantity) * MAX(cost) AS sum_cost,
+    SUM(revenue) - (SUM(quantity) * MAX(cost)) AS profit
+FROM
+    sample.sales
+    LEFT JOIN sample.products USING (product_id)
+GROUP BY
+    product_name
+ORDER BY
+    5 DESC
+LIMIT
+    3;
