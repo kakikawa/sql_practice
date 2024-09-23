@@ -1,0 +1,21 @@
+SELECT
+    *
+FROM
+    (
+        SELECT
+            product_category,
+            product_name,
+            cost,
+            -- rank関数は、「〇〇ごと」と考えるため、partition by句では、カテゴリーで区切る。
+            RANK() OVER (
+                PARTITION BY
+                    product_category
+                ORDER BY
+                    cost DESC
+            ) AS cost_rank
+        FROM
+            sample.products
+    )
+    --select句にあるウィンドウ関数の方が後に処理されるため、全レコードを出力して絞り込みをする。
+WHERE
+    cost_rank <= 3

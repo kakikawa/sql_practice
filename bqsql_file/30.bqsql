@@ -1,0 +1,52 @@
+WITH
+    master AS (
+        SELECT
+            cid,
+            session_count,
+            FIRST_VALUE(page) OVER (
+                PARTITION BY
+                    cid,
+                    session_count
+                ORDER BY
+                    date_time
+            ) AS l_page,
+            LAST_VALUE(page) OVER (
+                PARTITION BY
+                    cid,
+                    session_count
+                ORDER BY
+                    date_time
+                    -- 離脱ページ取得のために、ウィンドフィールドをテーブルの最後の行を取得することを明示する
+                    ROWS BETWEEN UNBOUNDED PRECEDING
+                    AND UNBOUNDED FOLLOWING
+            ) AS e_page
+        FROM
+            sample.web_log
+    )
+SELECT
+    CONCAT(l_page, '->', e_page) AS landing_and_exit,
+    COUNT(*) AS session
+FROM
+    (
+        SELECT
+            cid,
+            session_count,
+            MAX(l_page) AS l_page,
+            MAX(e_page) AS e_page
+        FROM
+            master
+        GROUP BY
+            cid,
+            session_count
+        HAVING
+            COUNT(*) > 1
+        ORDER BY
+            cid,
+            session_count
+    )
+GROUP BY
+    landing_and_exit
+ORDER BY
+    session DESC
+LIMIT
+    5

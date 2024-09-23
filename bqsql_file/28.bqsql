@@ -1,0 +1,37 @@
+WITH
+    master AS (
+        SELECT
+            FORMAT_DATETIME('%Y-%m', date_time) AS year_month,
+            product_id,
+            SUM(revenue) AS sum_rev
+        FROM
+            sample.sales
+        GROUP BY
+            year_month,
+            product_id
+    )
+SELECT
+    year_month,
+    product_id,
+    monthly_revenue_share
+FROM
+    (
+        SELECT
+            year_month,
+            product_id,
+            -- SUM()は集計分析としての関数ということが直後のOVER句で自明。
+            sum_rev / SUM(sum_rev) OVER (
+                -- year_monthで区切る
+                PARTITION BY
+                    year_month
+                    -- 最終行は現在の行がデフォではあるが、今回は明示的にテーブル全体をカバーするウィンドウフレームを指定する。
+                    ROWS BETWEEN UNBOUNDED PRECEDING
+                    AND UNBOUNDED FOLLOWING
+            ) AS monthly_revenue_share
+        FROM
+            master
+    )
+WHERE
+    monthly_revenue_share > 0.4
+ORDER BY
+    monthly_revenue_share DESC

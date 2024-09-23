@@ -1,0 +1,38 @@
+SELECT
+    -- 商品ごとに括り、ユニークユーザー数をカウントする。
+    first_purchase_product,
+    COUNT(DISTINCT user_id) AS number_of_users
+FROM
+    (
+        SELECT
+            -- user_idで括り、取得していたfirst_productを持たせると
+            -- 同じ商品を購入しているuserが複数人いることがわかる。
+            user_id,
+            MAX(first_product) AS first_purchase_product
+        FROM
+            (
+                --まだこのクエリでは、同一のユーザーIDが存在している。
+                SELECT
+                    user_id,
+                    product_id,
+                    FIRST_VALUE(product_id) OVER (
+                        PARTITION BY
+                            user_id
+                            --購入日時が過去、
+                            --１度の購入で複数点の購入の場合、商品IDが小さい順に並び替え.
+                        ORDER BY
+                            date_time,
+                            product_id
+                    ) AS first_product
+                FROM
+                    sample.sales
+            )
+        GROUP BY
+            user_id
+    )
+GROUP BY
+    first_purchase_product
+ORDER BY
+    number_of_users DESC
+LIMIT
+    5
