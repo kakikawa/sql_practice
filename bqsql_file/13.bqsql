@@ -1,0 +1,20 @@
+SELECT
+    CASE
+        WHEN gender = 1 THEN '男性'
+        WHEN gender = 2 THEN '女性'
+        ELSE 'その他'
+    END AS customer_gender,
+    product_category,
+    SUM(revenue) AS sum_rev
+FROM
+    sample.sales
+    # 売上データを軸に販売金額を求めるので、left joinが最適
+    # 仮に両方のマスタに未登録のデータ存在していたら、売上データが一部除外される危険性がある。
+    LEFT JOIN sample.products USING (product_id)
+    LEFT JOIN sample.customers USING (user_id)
+GROUP BY
+    customer_gender,
+    product_category
+ORDER BY
+    1,
+    3 DESC

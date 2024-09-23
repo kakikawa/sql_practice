@@ -1,0 +1,21 @@
+--total share
+WITH
+    master AS (
+        SELECT
+            SUM(quantity) AS sales_total
+        FROM
+            sample.sales
+    )
+SELECT
+    product_id,
+    SUM(quantity) AS sum_qty,
+    SUM(quantity) / MAX(sales_total) AS sales_share
+FROM
+    sample.sales
+    CROSS JOIN master
+GROUP BY
+    product_id
+ORDER BY
+    3 DESC
+LIMIT
+    5

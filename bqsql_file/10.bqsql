@@ -1,0 +1,36 @@
+SELECT
+    CASE
+        WHEN cost >= 0
+        AND 300 > cost THEN '1.0円以上300円未満'
+        WHEN cost >= 300
+        AND 600 > cost THEN '2.300円以上599円未満'
+        WHEN cost >= 600
+        AND 900 > cost THEN '3.600円以上899円未満'
+        WHEN cost >= 900
+        AND 1200 > cost THEN '4.900円以上1199円未満'
+    END AS cost_range,
+    COUNT(DISTINCT product_name) AS items
+FROM
+    sample.products
+GROUP BY
+    1
+ORDER BY
+    1;
+
+-- 単純な等しさで判別する場合
+SELECT
+    CASE prefectuer
+        WHEN '東京' THEN '関東主要都市'
+        WHEN '神奈川' THEN '関東主要都市'
+        WHEN '大阪' THEN '関西主要都市'
+        WHEN '京都' THEN '関西主要都市'
+        WHEN '兵庫' THEN '関西主要都市'
+        ELSE 'その他'
+    END AS pref_group,
+    COUNT(DISTINCT user_id) AS users
+FROM
+    sample.customers
+GROUP BY
+    1
+ORDER BY
+    1
