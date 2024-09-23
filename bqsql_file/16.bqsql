@@ -1,0 +1,34 @@
+WITH
+    master AS (
+        SELECT
+            product_id,
+            SUM(quantity) AS sum_qty,
+            SUM(revenue) AS sum_rev,
+            SUM(revenue) / SUM(quantity) AS avg_unit_price,
+        FROM
+            sample.sales
+        GROUP BY
+            product_id
+    )
+SELECT
+    *,
+    -- サブクエリ
+    (
+        SELECT
+            AVG(avg_unit_price)
+        FROM
+            master
+    ) AS avg_unit_price_by_product
+FROM
+    master
+WHERE
+    avg_unit_price >
+    -- サブクエリ
+    (
+        SELECT
+            AVG(avg_unit_price)
+        FROM
+            master
+    )
+ORDER BY
+    4 DESC

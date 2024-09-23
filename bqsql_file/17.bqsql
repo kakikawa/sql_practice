@@ -1,0 +1,31 @@
+WITH
+    master AS (
+        SELECT
+            *
+        FROM
+            sample.customers
+        WHERE
+            -- INの中で条件が一致する都道府県を取得するサブクエリ
+            prefectuer IN (
+                SELECT
+                    prefectuer
+                FROM
+                    sample.customers
+                GROUP BY
+                    prefectuer
+                HAVING
+                    SUM(IF(is_premium IS TRUE, 1, 0)) >= 4
+            )
+    )
+SELECT
+    *,
+FROM
+    master
+WHERE
+    -- 誕生日もMIN()で取得可能。高齢のため、birthdayの値が最も小さいデータを取得する。
+    birthday = (
+        SELECT
+            MIN(birthday)
+        FROM
+            master
+    )
