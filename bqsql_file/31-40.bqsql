@@ -1,0 +1,96 @@
+#31
+SELECT
+    *
+FROM
+    sample.customers
+WHERE
+    name LIKE ('山%子');
+
+#32
+SELECT
+    *
+FROM
+    sample.customers
+ORDER BY
+    RAND()
+LIMIT
+    3;
+
+#33 ピアソン相関係数
+SELECT
+    CORR(quantity, revenue) AS CORR
+FROM
+    sample.sales;
+
+#34　標準偏差（母集団）
+SELECT
+    -- popは分散に基づく標準偏差.全数（母集団）
+    -- sampは不偏分散に基づく標準偏差.サンプル
+    STDDEV_POP(cost) AS std_dev_cost
+FROM
+    sample.products;
+
+# 35-1
+SELECT
+    MIN(date_time) AS oledest_datetime
+FROM
+    sample.sales;
+
+# 35-2
+SELECT
+    date_time AS oledest_datetime
+FROM
+    sample.sales
+ORDER BY
+    date_time
+LIMIT
+    1;
+
+#36
+SELECT
+    order_id,
+    user_id,
+    revenue
+FROM
+    sample.sales
+ORDER BY
+    revenue DESC
+LIMIT
+    1;
+
+#37
+SELECT
+    *
+FROM
+    sample.sales
+WHERE
+    product_id = 5
+    AND revenue > 8000
+ORDER BY
+    order_id;
+
+#38
+SELECT
+    date_time
+FROM
+    sample.web_log
+WHERE
+    media = 'cpc'
+ORDER BY
+    date_time
+LIMIT
+    1;
+
+#39
+SELECT
+    MIN(date_time) AS date_time
+FROM
+    sample.sales
+WHERE
+    is_proper IS FALSE;
+
+# 40
+SELECT
+    MIN(birthday) AS birthday
+FROM
+    sample.customers;

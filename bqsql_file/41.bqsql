@@ -1,0 +1,115 @@
+#41
+SELECT
+    --分散はvar
+    VAR_POP(cost) AS var_cost
+FROM
+    sample.products
+WHERE
+    product_category NOT IN ('ゼリー');
+
+#42
+SELECT
+    user_id
+FROM
+    sample.sales
+WHERE
+    -- サンプリングなどで無作為にレコード数をざっくりと減らしたいときに使える
+    --割り算の余りを求めるMOD関数
+    # MOD(order_id, 3) = 0 はおよそ1/3に絞り込む
+    MOD(order_id, 3) = 0
+    AND MOD(order_id, 7) = 0
+ORDER BY
+    user_id
+LIMIT
+    1;
+
+#43
+SELECT
+    -- '%F'は'%Y-%m-%d'と同義
+    FORMAT_DATETIME('%F', date_time) AS newest_date
+FROM
+    sample.sales
+ORDER BY
+    date_time DESC
+LIMIT
+    1;
+
+#44
+SELECT
+    *
+FROM
+    sample.customers
+WHERE
+    name LIKE ('%子')
+    AND birthday IS NOT NULL
+ORDER BY
+    birthday
+LIMIT
+    1;
+
+#45
+SELECT
+    *
+FROM
+    sample.customers
+WHERE
+    --FORMAT_DATE()でもいい。
+    FORMAT_DATETIME('%m-%d', birthday) = FORMAT_DATETIME('%m-%d', register_date);
+
+#46
+SELECT
+    *
+FROM
+    sample.customers
+WHERE
+    prefectuer IN ('福岡', '佐賀', '長崎')
+    AND is_premium IS TRUE
+ORDER BY
+    user_id;
+
+#47
+SELECT
+    *
+FROM
+    sample.sales
+WHERE
+    date_time BETWEEN '2017-02-01' AND '2017-02-10'
+ORDER BY
+    revenue DESC
+LIMIT
+    1;
+
+#48
+SELECT
+    user_id,
+    name
+FROM
+    sample.customers
+WHERE
+    SUBSTR(name, 1, STRPOS(name, ' ') -1) LIKE ('%山')
+    AND gender = 1;
+
+#49
+SELECT
+    name,
+    birthday,
+    register_date
+FROM
+    sample.customers
+WHERE
+    birthday IS NULL
+    AND register_date IS NOT NULL;
+
+#50
+SELECT
+    *
+FROM
+    sample.products
+WHERE
+    product_category = 'クッキー'
+    AND product_name NOT LIKE ('%クッキー')
+    /*
+    #正規表現での書き方
+    最後がクッキーでマッチする正規表現が、falseとしているため、クッキーではない文字列とマッチ
+    REGEXP_CONTAINS(product_name, r"クッキー$") = FALSE
+     */
