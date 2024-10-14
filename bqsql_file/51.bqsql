@@ -1,0 +1,48 @@
+#51
+SELECT
+    DATE_DIFF(CURRENT_DATE(), birthday, YEAR) AS current_age
+FROM
+    sample.customers
+WHERE
+    birthday IS NOT NULL
+ORDER BY
+    birthday DESC
+LIMIT
+    1;
+
+#52
+SELECT
+    DATE_DIFF('2019-12-31', birthday, YEAR) AS youngest_age
+FROM
+    sample.customers
+WHERE
+    birthday IS NOT NULL
+ORDER BY
+    birthday DESC
+LIMIT
+    1;
+
+#53
+SELECT
+    CONCAT(product_category, '-', product_name) AS cat_prod,
+    cost
+FROM
+    sample.products
+ORDER BY
+    cost DESC
+LIMIT
+    3;
+
+#54
+SELECT
+    *
+FROM
+    sample.sales
+WHERE
+    product_id IN (7, 9, 11)
+    AND quantity >= 2
+    AND is_proper IS NOT TRUE
+ORDER BY
+    order_id;
+
+#55
